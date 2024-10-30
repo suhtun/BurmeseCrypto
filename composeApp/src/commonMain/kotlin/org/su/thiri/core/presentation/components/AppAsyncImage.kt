@@ -11,23 +11,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import burmesecrypto.composeapp.generated.resources.Res
 import burmesecrypto.composeapp.generated.resources.bitcoin
-import burmesecrypto.composeapp.generated.resources.ic_present
-import coil3.ImageLoader
-import coil3.PlatformContext
-import coil3.annotation.ExperimentalCoilApi
-import coil3.compose.AsyncImage
-import coil3.compose.setSingletonImageLoaderFactory
-import coil3.disk.DiskCache
-import coil3.memory.MemoryCache
-import coil3.request.CachePolicy
-import coil3.request.crossfade
-import coil3.util.DebugLogger
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.coil3.CoilImage
-import okio.FileSystem
 import org.jetbrains.compose.resources.painterResource
 
-@OptIn(ExperimentalCoilApi::class)
 @Composable
 fun AppAsyncImage(
     modifier: Modifier = Modifier.size(40.dp),

@@ -13,7 +13,6 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 import org.su.thiri.coin.presentation.coin_list.CoinListScreen
-import org.su.thiri.core.presentation.components.getAsyncImageLoader
 import org.su.thiri.ui.theme.BurmeseCryptoTheme
 
 @Composable

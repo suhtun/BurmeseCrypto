@@ -1,6 +1,7 @@
 package org.su.thiri.coin.presentation.coin_list.model
 
 import org.su.thiri.coin.domain.Coin
+import org.su.thiri.core.presentation.util.toDisplayableNumber
 import kotlin.math.abs
 
 data class CoinUi(
@@ -17,45 +18,21 @@ data class CoinUi(
     var websiteUrl: String? = null
 )
 
-internal val previewCoinUi = Coin(
-    id = "bitcoin",
-    name = "Bitcoin",
-    color = "#f7931A",
-    symbol = "BTC",
-    price = 1241273958896.75,
-    change = 0.1,
-    rank = 1,
-    marketCap = 1241273958896.54,
-    iconUrl = "https://cdn.coinranking.com/bOabBYkcX/bitcoin_btc.svg"
-).toCoinUi()
-
 data class DisplayableNumber(
     val value: Double,
     val formatted: String
 )
 
-//fun Double.toDisplayableNumberwithSuffix(): String {
-//    val absValue = abs(this)
-//    val df = DecimalFormat("#.##")
-//
-//    return when {
-//        absValue >= 1_000_000_000_000 -> "${df.format(this / 1_000_000_000_000)} trillion"
-//        absValue >= 1_000_000_000 -> "${df.format(this / 1_000_000_000)} billion"
-//        absValue >= 1_000_000 -> "${df.format(this / 1_000_000)} million"
-//        else -> df.format(this)
-//    }
-//}
+fun Double.toDisplayableNumberwithSuffix(): String {
+    val absValue = abs(this)
 
-fun Double.toDisplayableNumber(): DisplayableNumber {
-//    val formatter = NumberFormat.getNumberInstance(Locale.getDefault()).apply {
-//        minimumFractionDigits = 2
-//        maximumFractionDigits = 5
-//    }
-    return DisplayableNumber(
-        value = this,
-        formatted = this.toString()
-//        formatted = formatter.format(this)
-    )
+
+    return when {
+        absValue >= 1_000_000_000_000 -> "${toDisplayableNumber(this / 1_000_000_000_000).formatted} trillion"
+        absValue >= 1_000_000_000 -> "${toDisplayableNumber(this / 1_000_000_000).formatted} billion"
+        absValue >= 1_000_000 -> "${toDisplayableNumber(this / 1_000_000).formatted} million"
+        else -> toDisplayableNumber(this).formatted
+    }
 }
 
 fun Coin.toCoinUi(): CoinUi {
@@ -65,10 +42,9 @@ fun Coin.toCoinUi(): CoinUi {
         symbol = symbol,
         iconUrl = iconUrl,
         color = color,
-        price = price.toDisplayableNumber(),
-//        marketCap = marketCap.toDisplayableNumberwithSuffix(),
-        marketCap = marketCap.toString(),
-        change = change.toDisplayableNumber(),
+        price = toDisplayableNumber(price),
+        marketCap = marketCap.toDisplayableNumberwithSuffix(),
+        change = toDisplayableNumber(change),
         rank = rank
     )
 

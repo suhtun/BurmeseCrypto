@@ -9,7 +9,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.su.thiri.coin.presentation.coin_list.components.TopRankCoinItem
 import org.su.thiri.coin.presentation.coin_list.model.CoinUi
-import org.su.thiri.coin.presentation.coin_list.model.previewCoinUi
 
 @Composable
 fun TopRankCoinListView(coins: List<CoinUi>) {
