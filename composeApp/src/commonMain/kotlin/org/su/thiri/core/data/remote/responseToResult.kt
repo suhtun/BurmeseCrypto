@@ -1,0 +1,31 @@
+package com.su.coinproject.core.data.remote
+
+import com.su.coinproject.core.domain.util.NetworkError
+import io.ktor.client.call.NoTransformationFoundException
+import io.ktor.client.call.body
+import io.ktor.client.statement.HttpResponse
+import com.su.coinproject.core.domain.util.Result
+import io.ktor.serialization.JsonConvertException
+
+suspend inline fun <reified T> responseToResult(
+    response: HttpResponse
+): Result<T, NetworkError> {
+    return when (response.status.value) {
+        in 200..299 -> {
+            try {
+                Result.Success(response.body<T>())
+            } catch (e: JsonConvertException) {
+                return Result.Error(NetworkError.JSON_CONVERT)
+            } catch (e: NoTransformationFoundException) {
+                Result.Error(NetworkError.SERIALIZATION)
+            }
+        }
+
+        404 -> Result.Error(NetworkError.COIN_NOT_FOUND)
+        408 -> Result.Error(NetworkError.REQUEST_TIMEOUT)
+        422 -> Result.Error(NetworkError.VALIDATION_ERROR)
+        429 -> Result.Error(NetworkError.TOO_MANY_REQUESTS)
+        in 500..599 -> Result.Error(NetworkError.SERVER_ERROR)
+        else -> Result.Error(NetworkError.UNKNOWN)
+    }
+}
