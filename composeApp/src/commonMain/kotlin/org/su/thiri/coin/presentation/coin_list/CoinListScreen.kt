@@ -86,6 +86,7 @@ fun CoinListScreen(
     }
     Column(
         Modifier
+            .nestedScroll(connection = nestedScrollConnection)
 //            .semantics {
 //                testTagsAsResourceId = true
 //            }
@@ -95,111 +96,106 @@ fun CoinListScreen(
 
         CoinSearchBarView()
 
-        Box(
-            Modifier.nestedScroll(connection = nestedScrollConnection),
-        ) {
-            PullToRefreshBox(isRefreshing = isRefreshing,
-                onRefresh = {
-                    isRefreshing = true
-                    coins.refresh() // Refresh the LazyPagingItems
-                }) {
+        PullToRefreshBox(isRefreshing = isRefreshing,
+            onRefresh = {
+                isRefreshing = true
+                coins.refresh() // Refresh the LazyPagingItems
+            }) {
 
-                val topRanks =
-                    coins.itemSnapshotList.items
-                        .sortedByDescending { it.rank }.take(3)
+            val topRanks =
+                coins.itemSnapshotList.items
+                    .sortedByDescending { it.rank }.take(3)
 
-                Column(
-                    Modifier
-                        .fillMaxWidth()
-                        .height(currentImageSize.dp)
-                ) {
-                    Spacer(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 16.dp)
-                            .height(1.dp)
-                            .background(Color.LightGray)
-                    )
-                    val primaryFontColor = if (isSystemInDarkTheme()) {
-                        Color.White
-                    } else {
-                        Color.Black
-                    }
-                    Text(
-                        text = "Buy, sell and hold crypto",
-                        fontSize = 16.sp,
-                        color = primaryFontColor,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(16.dp)
-                    )
-                    TopRankCoinListView(coins = topRanks)
-                }
-
-                val screenWidthDp = screenWidth()
-
-//                val columns = when {
-//                    screenWidthDp >= 900 -> 3 // 3 columns for tablets (or screens wider than 600dp)
-//                    screenWidthDp >= 600 -> 2          // 2 columns for phones in landscape
-//                    else -> 1                 // 1 column for phones in portrait
-//                }
-                val columns = 1
-
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(columns),
+            Column(
+                Modifier
+                    .fillMaxWidth()
+                    .height(currentImageSize.dp)
+            ) {
+                Spacer(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(top = currentImageSize.dp)
-                        .testTag("coin_list"),
-                ) {
-                    items(coins.itemCount) { index ->
-                        coins[index]?.let { coinUi ->
-                            if (topRanks.any { it.id != coinUi.id }) {
-                                CoinListItem(
-                                    coinUi,
-                                    onClick = { coin ->
-                                        viewModel.onAction(CoinListAction.OnCoinClick(coin))
-                                    })
-                            }
+                        .fillMaxWidth()
+                        .padding(top = 16.dp)
+                        .height(1.dp)
+                        .background(Color.LightGray)
+                )
+                val primaryFontColor = if (isSystemInDarkTheme()) {
+                    Color.White
+                } else {
+                    Color.Black
+                }
+                Text(
+                    text = "Buy, sell and hold crypto",
+                    fontSize = 16.sp,
+                    color = primaryFontColor,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(16.dp)
+                )
+                TopRankCoinListView(coins = topRanks)
+            }
+
+            val screenWidthDp = screenWidth()
+
+            val columns = when {
+                screenWidthDp >= 900 -> 3 // 3 columns for tablets (or screens wider than 600dp)
+                screenWidthDp >= 600 -> 2          // 2 columns for phones in landscape
+                else -> 1                 // 1 column for phones in portrait
+            }
+
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(columns),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = currentImageSize.dp)
+                    .testTag("coin_list"),
+            ) {
+                items(coins.itemCount) { index ->
+                    coins[index]?.let { coinUi ->
+                        if (topRanks.any { it.id != coinUi.id }) {
+                            CoinListItem(
+                                coinUi,
+                                onClick = { coin ->
+                                    viewModel.onAction(CoinListAction.OnCoinClick(coin))
+                                })
                         }
                     }
+                }
 
-                    item {
-                        when {
-                            coins.loadState.refresh is LoadState.Loading -> {
-                                AppLoadingView()
-                            }
+                item {
+                    when {
+                        coins.loadState.refresh is LoadState.Loading -> {
+                            AppLoadingView()
+                        }
 
-                            coins.loadState.refresh is LoadState.Error -> {
-                                val e = coins.loadState.refresh as LoadState.Error
-                                ErrorMessageView(message = e.error.message) {
-                                    coins.retry()
-                                }
+                        coins.loadState.refresh is LoadState.Error -> {
+                            val e = coins.loadState.refresh as LoadState.Error
+                            ErrorMessageView(message = e.error.message) {
+                                coins.retry()
                             }
+                        }
 
-                            coins.loadState.append is LoadState.Error -> {
-                                val e = coins.loadState.append as LoadState.Error
-                                ErrorMessageView(message = e.error.message) {
-                                    coins.retry()
-                                }
+                        coins.loadState.append is LoadState.Error -> {
+                            val e = coins.loadState.append as LoadState.Error
+                            ErrorMessageView(message = e.error.message) {
+                                coins.retry()
                             }
+                        }
 
-                            coins.loadState.append is LoadState.Loading -> {
-                                AppLoadingView()
-                            }
+                        coins.loadState.append is LoadState.Loading -> {
+                            AppLoadingView()
                         }
                     }
                 }
             }
-
         }
 
-        if (state.isLoading) {
-            AppLoadingView()
-        }
+    }
 
-        if (state.showCoinDetail) {
-            CoinDetailView()
-        }
+    if (state.isLoading) {
+        AppLoadingView()
+    }
+
+    if (state.showCoinDetail) {
+        CoinDetailView()
     }
 }
 
