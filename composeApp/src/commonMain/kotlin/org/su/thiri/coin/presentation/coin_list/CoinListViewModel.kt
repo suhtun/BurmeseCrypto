@@ -18,11 +18,12 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.su.thiri.coin.domain.Coin
 import org.su.thiri.coin.presentation.coin_list.CoinListAction
 import org.su.thiri.coin.presentation.coin_list.CoinListState
 
 class CoinListViewModel(
-    pager: Pager<Int, CoinData>,
+    pager: Pager<Int, Coin>,
     private val coinRepository: CoinRepository,
 ) : ViewModel() {
 
@@ -30,11 +31,7 @@ class CoinListViewModel(
         .flow
         .map { pagingData ->
             pagingData.map { item ->
-                if (item is CoinData.CoinCard) {
-                    CoinListItemType.CoinUiType(item.coin.toCoinUi())
-                } else
-                    CoinListItemType.InviteFriendType
-
+                item.toCoinUi()
             }
         }
         .cachedIn(viewModelScope)
@@ -46,22 +43,6 @@ class CoinListViewModel(
         SharingStarted.WhileSubscribed(5000L),
         CoinListState()
     )
-
-
-//todo: need workaround for logic
-//    init {
-//        // Launch a coroutine to refresh data every 10 seconds
-//        viewModelScope.launch {
-//            while (true) {
-//                delay(10_000) // Wait for 10 seconds
-//                _state.update {
-//                    it.copy(
-//                        refreshPaing = true
-//                    )
-//                }
-//            }
-//        }
-//    }
 
     fun onAction(action: CoinListAction) {
         when (action) {

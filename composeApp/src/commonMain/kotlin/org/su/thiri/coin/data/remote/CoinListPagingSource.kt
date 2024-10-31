@@ -2,51 +2,37 @@ package org.su.thiri.coin.data.remote
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.su.coinproject.core.domain.util.onError
-import com.su.coinproject.core.domain.util.onSuccess
-import org.su.thiri.coin.domain.CoinData
+import org.su.thiri.coin.domain.Coin
 import org.su.thiri.coin.domain.CoinRepository
+import com.su.coinproject.core.domain.util.Result
 
 class CoinListPagingSource(
     private val repository: CoinRepository
-) : PagingSource<Int, CoinData>() {
+) : PagingSource<Int, Coin>() {
 
     private val limitCoins = 10
-    private var calculatedInviteFriendIndex = 5
-    private var inviteFriendCount = 0
 
-    override fun getRefreshKey(state: PagingState<Int, CoinData>): Int? {
+    override fun getRefreshKey(state: PagingState<Int, Coin>): Int? {
         return state.anchorPosition?.let { state.closestPageToPosition(it)?.prevKey?.plus(1) }
     }
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, CoinData> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Coin> {
         val page = params.key ?: 1
         return try {
-            var coins = mutableListOf<CoinData>()
-            repository.getCoins(limitCoins, (page * limitCoins))
-                .onSuccess { loadedCoins ->
-                    loadedCoins.mapIndexed { index, coin ->
-                        val calculateCurrentIndex =
-                            if (page == 1) (index + 1) else (index) + ((page - 1) * limitCoins)
-                        val newInviteCardIndex = (calculatedInviteFriendIndex-inviteFriendCount) + (page - 1)
-
-                        if (newInviteCardIndex== calculateCurrentIndex) {
-                            coins.add(CoinData.InviteFriendCard)
-                            coins.add(CoinData.CoinCard(coin))
-                            inviteFriendCount++
-                            calculatedInviteFriendIndex = (calculateCurrentIndex * 2)
-                        } else
-                            coins.add(CoinData.CoinCard(coin))
-                    }
-                }.onError { error ->
-//                    throw CustomPagingException(error.toString(context))
+            when (val result = repository.getCoins(limitCoins, page * limitCoins)) {
+                is Result.Error -> {
+                    LoadResult.Error(CustomPagingException(result.error.name)) // Return error load result
                 }
+                is Result.Success -> {
+                    val loadedCoins = result.data // Get the list of coins
+                    LoadResult.Page(
+                        data = loadedCoins, // The list of coins retrieved
+                        prevKey = if (page == 0) null else page - 1, // Previous key logic
+                        nextKey = if (loadedCoins.isEmpty()) null else page + 1 // Next key logic
+                    )
+                }
+            }
 
-            LoadResult.Page(
-                data = coins,
-                prevKey = if (page == 1) null else page - 1,
-                nextKey = if (coins.isEmpty()) null else page + 1
-            )
         } catch (e: Exception) {
             LoadResult.Error(e)
         }

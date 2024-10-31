@@ -39,20 +39,20 @@ import org.su.thiri.core.presentation.components.ErrorMessageView
 import org.su.thiri.coin.presentation.coin_search.CoinSearchBarView
 import org.su.thiri.coin.presentation.coin_detail.CoinDetailView
 import org.su.thiri.coin.presentation.coin_list.components.CoinListItem
-import org.su.thiri.coin.presentation.coin_list.components.InviteFriendItem
 import org.su.thiri.coin.presentation.coin_list.model.CoinListItemType
 import org.koin.compose.viewmodel.koinViewModel
+import org.su.thiri.coin.presentation.coin_list.model.CoinUi
 
 const val maxTopBoxSize = 260f
 const val minTopBoxSize = 0f
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CoinListScreen(
     modifier: Modifier = Modifier,
     viewModel: CoinListViewModel = koinViewModel()
 ) {
-    val coins: LazyPagingItems<CoinListItemType> =
+    val coins: LazyPagingItems<CoinUi> =
         viewModel.coinListPagingFlow.collectAsLazyPagingItems()
 
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -106,8 +106,8 @@ fun CoinListScreen(
                 }) {
 
                 val topRanks =
-                    coins.itemSnapshotList.items.filterIsInstance<CoinListItemType.CoinUiType>()
-                        .sortedByDescending { it.coinUi.rank }.take(3)
+                    coins.itemSnapshotList.items
+                        .sortedByDescending { it.rank }.take(3)
 
                 Column(
                     Modifier
@@ -127,7 +127,7 @@ fun CoinListScreen(
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(16.dp)
                     )
-                    TopRankCoinListView(coins = topRanks.map { it.coinUi })
+                    TopRankCoinListView(coins = topRanks)
                 }
 
 //                val configuration = LocalConfiguration.current
@@ -149,21 +149,13 @@ fun CoinListScreen(
                         .testTag("coin_list"),
                 ) {
                     items(coins.itemCount) { index ->
-                        coins[index]?.let { coinData ->
-                            when (coinData) {
-                                is CoinListItemType.CoinUiType -> {
-                                    if (topRanks.any { it.coinUi.id != coinData.coinUi.id }) {
-                                        CoinListItem(
-                                            coinData.coinUi,
-                                            onClick = { coinUi ->
-                                                viewModel.onAction(CoinListAction.OnCoinClick(coinUi))
-                                            })
-                                    }
-                                }
-
-                                CoinListItemType.InviteFriendType -> {
-                                    InviteFriendItem()
-                                }
+                        coins[index]?.let { coinUi ->
+                            if (topRanks.any { it.id != coinUi.id }) {
+                                CoinListItem(
+                                    coinUi,
+                                    onClick = { coin ->
+                                        viewModel.onAction(CoinListAction.OnCoinClick(coin))
+                                    })
                             }
                         }
                     }

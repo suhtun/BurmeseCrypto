@@ -51,6 +51,10 @@ koin-compose-viewmodel-navigation = { module = "io.insert-koin:koin-compose-view
 landscapist-coil3 = { module = "com.github.skydoves:landscapist-coil3", version.ref = "landscapistCoil3" }
 paging-compose-common = { module = "app.cash.paging:paging-compose-common", version.ref = "paging" }
 
+coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil3" }
+coil-compose-core = { module = "io.coil-kt.coil3:coil-compose-core", version.ref = "coil3" }
+coil-svg = { module = "io.coil-kt.coil3:coil-svg", version.ref = "coil3" }
+
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
@@ -60,6 +64,11 @@ kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref =
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
 [bundles]
+coil = [
+    "coil-compose",
+    "coil-compose-core",
+    "coil-svg"
+]
 ui-common = [
     "paging-compose-common",
 ]

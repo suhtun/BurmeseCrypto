@@ -1,4 +1,4 @@
-package com.su.coinproject.core.data.remote
+package org.su.thiri.core.data.remote
 
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine

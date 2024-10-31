@@ -51,6 +51,7 @@ kotlin {
             implementation(libs.bundles.ktor.core)
             implementation(libs.bundles.koin)
             implementation(libs.bundles.ui.common)
+            implementation(libs.bundles.coil)
             implementation(libs.landscapist.coil3)
         }
         iosMain.dependencies {

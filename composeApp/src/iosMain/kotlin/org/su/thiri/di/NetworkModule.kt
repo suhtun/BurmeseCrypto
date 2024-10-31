@@ -1,6 +1,6 @@
 package org.su.thiri.di
 
-import com.su.coinproject.core.data.remote.HttpClientFactory
+import org.su.thiri.core.data.remote.HttpClientFactory
 import io.ktor.client.engine.darwin.Darwin
 import org.koin.dsl.module
 

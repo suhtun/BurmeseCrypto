@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -27,15 +28,16 @@ import org.su.thiri.coin.presentation.coin_list.model.toCoinUi
 fun TopRankCoinItem(
     coinUi: CoinUi,
     onClick: (CoinUi) -> Unit = {},
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    contentColor: Color = MaterialTheme.colorScheme.onSurface,
 ) {
-    val primaryFontColor  = if(isSystemInDarkTheme()) {
+    val primaryFontColor = if (isSystemInDarkTheme()) {
         Color.White
     } else {
         Color.Black
     }
 
-    val secondaryFontColor  = if(isSystemInDarkTheme()) {
+    val secondaryFontColor = if (isSystemInDarkTheme()) {
         Color.LightGray
     } else {
         Color.DarkGray
@@ -46,6 +48,10 @@ fun TopRankCoinItem(
             .widthIn(min = 105.dp, max = 180.dp)
             .clickable(onClick = { onClick(coinUi) }),
         elevation = CardDefaults.cardElevation(6.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainer,
+            contentColor = contentColor
+        )
     ) {
         Column(
             modifier = modifier
@@ -79,15 +85,3 @@ fun TopRankCoinItem(
         }
     }
 }
-
-internal val previewTopCoin = Coin(
-    id = "bitcoin",
-    name = "Bitcoin",
-    color = "#f7931A",
-    symbol = "BTC",
-    price = 1241273958896.75,
-    change = 0.1,
-    rank = 1,
-    marketCap = 1241273958896.54,
-    iconUrl = "https://cdn.coinranking.com/bOabBYkcX/bitcoin_btc.svg"
-).toCoinUi()

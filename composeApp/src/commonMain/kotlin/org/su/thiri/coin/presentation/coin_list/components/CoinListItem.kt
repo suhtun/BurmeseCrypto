@@ -3,6 +3,7 @@ package org.su.thiri.coin.presentation.coin_list.components
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -27,24 +28,23 @@ fun CoinListItem(
     onClick: (CoinUi) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
-    val primaryFontColor  = if(isSystemInDarkTheme()) {
+    val primaryFontColor = if (isSystemInDarkTheme()) {
         Color.White
     } else {
         Color.Black
     }
 
-    val secondaryFontColor  = if(isSystemInDarkTheme()) {
+    val secondaryFontColor = if (isSystemInDarkTheme()) {
         Color.LightGray
     } else {
         Color.DarkGray
     }
 
-    Card(
-        modifier = Modifier
-            .clickable(onClick = { onClick(coinUi) })
-            .padding(8.dp),
-        elevation = CardDefaults.cardElevation(6.dp),
-    ) {
+    Box(
+        Modifier
+            .padding(top = 8.dp, start = 8.dp, end = 8.dp)
+            .clickable { onClick(coinUi) })
+    {
         Row(
             modifier = modifier
                 .padding(12.dp),
@@ -65,7 +65,7 @@ fun CoinListItem(
                     text = coinUi.symbol,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
-                    color =secondaryFontColor
+                    color = secondaryFontColor
                 )
             }
             Column(
