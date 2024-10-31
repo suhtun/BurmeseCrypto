@@ -4,8 +4,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -25,7 +25,7 @@ import org.su.thiri.coin.presentation.coin_list.model.CoinUi
 import org.su.thiri.coin.presentation.coin_list.model.toCoinUi
 
 @Composable
-fun TopRankCoinItem(
+fun TopRankCoinHorizontalItem(
     coinUi: CoinUi,
     onClick: (CoinUi) -> Unit = {},
     modifier: Modifier = Modifier,
@@ -37,10 +37,55 @@ fun TopRankCoinItem(
         Color.Black
     }
 
+    Card(
+        modifier = modifier
+            .widthIn(min = 105.dp, max = 180.dp)
+            .clickable(onClick = { onClick(coinUi) }),
+        elevation = CardDefaults.cardElevation(6.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainer,
+            contentColor = contentColor
+        )
+    ) {
+        Row(
+            modifier = modifier
+                .padding(12.dp),
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            AppAsyncImage(url = coinUi.iconUrl, name = coinUi.name)
+            Column {
+                Text(
+                    text = coinUi.symbol,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = primaryFontColor
+                )
+                PriceChange(
+                    change = coinUi.change
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun TopRankCoinItem(
+    coinUi: CoinUi,
+    onClick: (CoinUi) -> Unit = {},
+    modifier: Modifier = Modifier,
+    contentColor: Color = MaterialTheme.colorScheme.onSurface,
+) {
+    val primaryFontColor = if (isSystemInDarkTheme()) {
+        Color.White
+    } else {
+        Color.White
+    }
+
     val secondaryFontColor = if (isSystemInDarkTheme()) {
         Color.LightGray
     } else {
-        Color.DarkGray
+        Color.LightGray
     }
 
     Card(
@@ -55,6 +100,7 @@ fun TopRankCoinItem(
     ) {
         Column(
             modifier = modifier
+                .widthIn(min = 105.dp, max = 180.dp)
                 .padding(12.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally,

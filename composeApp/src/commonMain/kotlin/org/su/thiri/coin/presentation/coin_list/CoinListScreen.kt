@@ -2,7 +2,6 @@ package org.su.thiri.coin.presentation.coin_list
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -43,6 +42,7 @@ import org.koin.compose.viewmodel.koinViewModel
 import org.su.thiri.coin.presentation.coin_list.model.CoinUi
 
 const val maxTopBoxSize = 210f
+const val maxLandscapeTopBoxSize = 100f
 const val minTopBoxSize = 0f
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -58,7 +58,7 @@ fun CoinListScreen(
 
     var isRefreshing by remember { mutableStateOf(false) }
 
-    var currentImageSize by remember {
+    var topRankingBoxHeight by remember {
         mutableStateOf(maxTopBoxSize)
     }
 
@@ -67,10 +67,10 @@ fun CoinListScreen(
             override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
 
                 val delta = available.y.toInt()
-                val newImageSize = currentImageSize + delta
-                val perviousSize = currentImageSize
-                currentImageSize = newImageSize.coerceIn(minTopBoxSize, maxTopBoxSize)
-                val consumed = currentImageSize - perviousSize
+                val newImageSize = topRankingBoxHeight + delta
+                val perviousSize = topRankingBoxHeight
+                topRankingBoxHeight = newImageSize.coerceIn(minTopBoxSize, maxTopBoxSize)
+                val consumed = topRankingBoxHeight - perviousSize
 
                 return Offset(0f, consumed)
             }
@@ -96,6 +96,8 @@ fun CoinListScreen(
 
         CoinSearchBarView()
 
+
+
         PullToRefreshBox(isRefreshing = isRefreshing,
             onRefresh = {
                 isRefreshing = true
@@ -106,46 +108,62 @@ fun CoinListScreen(
                 coins.itemSnapshotList.items
                     .sortedByDescending { it.rank }.take(3)
 
+            val screenWidthDp = screenWidth()
+
+            var columns = 1
+
+            when {
+                screenWidthDp >= 900 -> {
+                    columns = 3
+                    topRankingBoxHeight = maxTopBoxSize
+                }
+
+                screenWidthDp >= 600 -> {
+                    columns = 2
+                    topRankingBoxHeight = maxLandscapeTopBoxSize
+                }
+
+                else -> {
+                    columns = 1
+                    topRankingBoxHeight = maxTopBoxSize
+                }
+            }
+
             Column(
                 Modifier
                     .fillMaxWidth()
-                    .height(currentImageSize.dp)
+                    .height(topRankingBoxHeight.dp)
             ) {
-                Spacer(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 16.dp)
-                        .height(1.dp)
-                        .background(Color.LightGray)
-                )
                 val primaryFontColor = if (isSystemInDarkTheme()) {
                     Color.White
                 } else {
                     Color.Black
                 }
-                Text(
-                    text = "Buy, sell and hold crypto",
-                    fontSize = 16.sp,
-                    color = primaryFontColor,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(16.dp)
+                Spacer(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp, bottom = 16.dp)
+                        .height(1.dp)
+                        .background(Color.LightGray)
                 )
+                if (columns != 2) {
+
+                    Text(
+                        text = "Buy, sell and hold crypto",
+                        fontSize = 16.sp,
+                        color = primaryFontColor,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(horizontal = 16.dp)
+                    )
+                }
                 TopRankCoinListView(coins = topRanks)
-            }
-
-            val screenWidthDp = screenWidth()
-
-            val columns = when {
-                screenWidthDp >= 900 -> 3 // 3 columns for tablets (or screens wider than 600dp)
-                screenWidthDp >= 600 -> 2          // 2 columns for phones in landscape
-                else -> 1                 // 1 column for phones in portrait
             }
 
             LazyVerticalGrid(
                 columns = GridCells.Fixed(columns),
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(top = currentImageSize.dp)
+                    .padding(top = topRankingBoxHeight.dp)
                     .testTag("coin_list"),
             ) {
                 items(coins.itemCount) { index ->

@@ -91,7 +91,7 @@ fun BurmeseCryptoTheme(
 ) {
 
     val colors by mutableStateOf(
-        if (isSystemInDarkTheme()) darkScheme else darkScheme
+        if (isSystemInDarkTheme()) darkScheme else lightScheme
     )
 
     MaterialTheme(
