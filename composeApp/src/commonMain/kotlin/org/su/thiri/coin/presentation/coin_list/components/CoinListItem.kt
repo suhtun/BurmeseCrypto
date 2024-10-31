@@ -1,5 +1,8 @@
 package org.su.thiri.coin.presentation.coin_list.components
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -9,6 +12,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
@@ -24,9 +28,9 @@ import org.su.thiri.coin.presentation.coin_list.model.CoinUi
 
 @Composable
 fun CoinListItem(
+    modifier: Modifier = Modifier,
     coinUi: CoinUi,
     onClick: (CoinUi) -> Unit = {},
-    modifier: Modifier = Modifier
 ) {
     val primaryFontColor = if (isSystemInDarkTheme()) {
         Color.White
@@ -40,6 +44,7 @@ fun CoinListItem(
         Color.DarkGray
     }
 
+
     Box(
         Modifier
             .padding(top = 8.dp, start = 8.dp, end = 8.dp)
@@ -51,7 +56,13 @@ fun CoinListItem(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            AppAsyncImage(url = coinUi.iconUrl, name = coinUi.name)
+
+            AppAsyncImage(
+                url = coinUi.iconUrl,
+                name = coinUi.name,
+                modifier = Modifier.size(40.dp)
+            )
+
             Column(
                 modifier = Modifier.weight(1f)
             ) {

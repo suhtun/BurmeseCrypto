@@ -13,5 +13,6 @@ data class CoinDto(
     val marketCap: Double,
     val change: Double,
     val rank:Int,
+    val sparkline: List<String?>
 )
 

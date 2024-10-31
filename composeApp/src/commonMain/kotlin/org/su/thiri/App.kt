@@ -13,6 +13,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 import org.su.thiri.coin.presentation.coin_list.CoinListScreen
+import org.su.thiri.coin.presentation.coin_list.SampleSharedElements
 import org.su.thiri.ui.theme.BurmeseCryptoTheme
 
 @Composable
@@ -20,7 +21,7 @@ import org.su.thiri.ui.theme.BurmeseCryptoTheme
 fun App() {
     BurmeseCryptoTheme {
 
-        CoinListScreen()
+        SampleSharedElements()
 //        var showContent by remember { mutableStateOf(false) }
 //        Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
 //            Button(onClick = { showContent = !showContent }) {

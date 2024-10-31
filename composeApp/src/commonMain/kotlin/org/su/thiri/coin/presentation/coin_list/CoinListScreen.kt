@@ -1,7 +1,13 @@
 package org.su.thiri.coin.presentation.coin_list
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -39,16 +45,60 @@ import org.su.thiri.coin.presentation.coin_search.CoinSearchBarView
 import org.su.thiri.coin.presentation.coin_detail.CoinDetailView
 import org.su.thiri.coin.presentation.coin_list.components.CoinListItem
 import org.koin.compose.viewmodel.koinViewModel
+import org.su.thiri.coin.presentation.coin_detail.CoinDetailScreen
 import org.su.thiri.coin.presentation.coin_list.model.CoinUi
 
-const val maxTopBoxSize = 210f
+const val SAMPLE_KEY = "sample"
+
+@OptIn(ExperimentalSharedTransitionApi::class)
+@Composable
+fun SampleSharedElements(modifier: Modifier = Modifier) {
+    var showDetail by remember {
+        mutableStateOf(false)
+    }
+
+    var selectedCoin: CoinUi? by remember {
+        mutableStateOf(null)
+    }
+
+    SharedTransitionLayout {
+        Box(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
+            AnimatedContent(showDetail, label = "basic") { targetScope ->
+                if (!targetScope) {
+                    CoinListScreen(
+                        modifier = modifier,
+                        onShowDetail = {
+                            selectedCoin = it
+                            showDetail = !showDetail
+                        },
+                        sharedTransitionScope = this@SharedTransitionLayout,
+                        animatedVisibilityScope = this@AnimatedContent
+                    )
+                } else {
+                    CoinDetailScreen(
+                        modifier = modifier,
+                        coin = selectedCoin,
+                        onBack = { showDetail = !showDetail },
+                        sharedTransitionScope = this@SharedTransitionLayout,
+                        animatedVisibilityScope = this@AnimatedContent
+                    )
+                }
+            }
+        }
+    }
+}
+
+const val maxTopBoxSize = 240f
 const val maxLandscapeTopBoxSize = 100f
 const val minTopBoxSize = 0f
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun CoinListScreen(
     modifier: Modifier = Modifier,
+    onShowDetail: (CoinUi) -> Unit = {},
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope,
     viewModel: CoinListViewModel = koinViewModel()
 ) {
     val coins: LazyPagingItems<CoinUi> =
@@ -94,9 +144,10 @@ fun CoinListScreen(
             .background(MaterialTheme.colorScheme.background)
     ) {
 
-        CoinSearchBarView()
-
-
+        CoinSearchBarView(
+            sharedTransitionScope = sharedTransitionScope,
+            animatedVisibilityScope = animatedVisibilityScope
+        )
 
         PullToRefreshBox(isRefreshing = isRefreshing,
             onRefresh = {
@@ -156,7 +207,13 @@ fun CoinListScreen(
                         modifier = Modifier.padding(horizontal = 16.dp)
                     )
                 }
-                TopRankCoinListView(coins = topRanks)
+                TopRankCoinListView(
+                    coins = topRanks, onClick = {
+                        onShowDetail(it)
+                    },
+                    sharedTransitionScope = sharedTransitionScope,
+                    animatedVisibilityScope = animatedVisibilityScope
+                )
             }
 
             LazyVerticalGrid(
@@ -170,10 +227,12 @@ fun CoinListScreen(
                     coins[index]?.let { coinUi ->
                         if (topRanks.any { it.id != coinUi.id }) {
                             CoinListItem(
-                                coinUi,
+                                coinUi = coinUi,
                                 onClick = { coin ->
-                                    viewModel.onAction(CoinListAction.OnCoinClick(coin))
-                                })
+                                    onShowDetail(coin)
+//                                    viewModel.onAction(CoinListAction.OnCoinClick(coin))
+                                },
+                            )
                         }
                     }
                 }

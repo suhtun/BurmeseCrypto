@@ -1,5 +1,8 @@
 package org.su.thiri.coin.presentation.coin_search
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -43,10 +46,12 @@ import org.su.thiri.coin.presentation.coin_list.components.CoinListItem
 import kotlinx.coroutines.delay
 import org.koin.compose.viewmodel.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun CoinSearchBarView(
-    viewModel: CoinSearchBarViewModel = koinViewModel()
+    viewModel: CoinSearchBarViewModel = koinViewModel(),
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope,
 ) {
 
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -154,7 +159,7 @@ fun CoinSearchBarView(
                     ) {
                         items(coins.size) { index ->
                             CoinListItem(
-                                coins[index]
+                                coinUi = coins[index],
                             )
 
                         }

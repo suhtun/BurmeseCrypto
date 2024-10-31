@@ -13,6 +13,7 @@ fun CoinDto.toCoin(): Coin {
         price = price,
         marketCap = marketCap,
         change = change,
-        rank=rank
+        rank=rank,
+        sparkline=sparkline.filterNotNull().map { it.toDouble() }
     )
 }

@@ -1,5 +1,8 @@
 package org.su.thiri.coin.presentation.coin_list
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,28 +15,82 @@ import org.su.thiri.coin.presentation.coin_list.components.TopRankCoinHorizontal
 import org.su.thiri.coin.presentation.coin_list.components.TopRankCoinItem
 import org.su.thiri.coin.presentation.coin_list.model.CoinUi
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun TopRankCoinListView(coins: List<CoinUi>) {
-    LazyRow(
-        modifier = Modifier.fillMaxSize(), verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(10.dp, Alignment.CenterHorizontally)
-    ) {
-        items(coins.size) { index ->
-            val screenWidthDp = screenWidth()
-            when {
-                screenWidthDp >= 900 -> {
-                    TopRankCoinItem(coinUi = coins[index])
-                }
+fun TopRankCoinListView(
+    coins: List<CoinUi>,
+    onClick: (CoinUi) -> Unit = {},
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope,
+) {
 
-                screenWidthDp >= 600 -> {
-                    TopRankCoinHorizontalItem(coinUi = coins[index])
-                }
+    val screenWidthDp = screenWidth()
+    when {
+        screenWidthDp >= 900 -> {
+            TopCoinsDisplay(
+                coins = coins,
+                onClick = onClick,
+                sharedTransitionScope = sharedTransitionScope,
+                animatedVisibilityScope = animatedVisibilityScope
+            )
+        }
 
-                else -> {
-                    TopRankCoinItem(coinUi = coins[index])
-                }
-            }
+        screenWidthDp >= 600 -> {
+            TopCoinsDisplay(
+                coins = coins,
+                onClick = onClick,
+                sharedTransitionScope = sharedTransitionScope,
+                animatedVisibilityScope = animatedVisibilityScope
+            )
+        }
+
+        else -> {
+            TopCoinsDisplay(
+                coins = coins,
+                onClick = onClick,
+                sharedTransitionScope = sharedTransitionScope,
+                animatedVisibilityScope = animatedVisibilityScope
+            )
         }
     }
+}
+
+@OptIn(ExperimentalSharedTransitionApi::class)
+@Composable
+fun TopCoinsDisplay(
+    modifier: Modifier = Modifier,
+    coins: List<CoinUi>,
+    onClick: (CoinUi) -> Unit = {},
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope,
+) {
+    Row(
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        coins.forEach { coin ->
+            TopRankCoinItem(
+                coinUi = coin,
+                onClick = onClick,
+                sharedTransitionScope = sharedTransitionScope,
+                animatedVisibilityScope = animatedVisibilityScope
+            )
+        }
+
+//        TopRankCoinItem(
+//            coinUi = coins[1],
+//            onClick = onClick,
+//            sharedTransitionScope = sharedTransitionScope,
+//            animatedVisibilityScope = animatedVisibilityScope
+//        )
+//
+//        TopRankCoinItem(
+//            coinUi = coins[2],
+//            onClick = onClick,
+//            sharedTransitionScope = sharedTransitionScope,
+//            animatedVisibilityScope = animatedVisibilityScope
+//        )
+    }
+
 }
 

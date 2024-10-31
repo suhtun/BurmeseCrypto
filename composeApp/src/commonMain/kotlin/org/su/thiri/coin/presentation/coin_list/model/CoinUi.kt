@@ -5,7 +5,7 @@ import org.su.thiri.core.presentation.util.toDisplayableNumber
 import kotlin.math.abs
 
 data class CoinUi(
-    val id: String,
+    val id: String = "",
     val name: String,
     val symbol: String,
     val iconUrl: String,
@@ -14,6 +14,7 @@ data class CoinUi(
     val marketCap: String,
     val change: DisplayableNumber,
     val rank: Int,
+    val sparkline: List<Double>,
     var description: String? = null,
     var websiteUrl: String? = null
 )
@@ -45,7 +46,8 @@ fun Coin.toCoinUi(): CoinUi {
         price = toDisplayableNumber(price),
         marketCap = marketCap.toDisplayableNumberwithSuffix(),
         change = toDisplayableNumber(change),
-        rank = rank
+        rank = rank,
+        sparkline = sparkline
     )
 
 }

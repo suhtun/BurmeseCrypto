@@ -11,6 +11,7 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.bind
 import org.koin.dsl.module
+import org.su.thiri.coin.presentation.coin_detail.CoinDetailViewModel
 
 val appModule = module {
 
@@ -29,8 +30,10 @@ val appModule = module {
     viewModel {
         CoinListViewModel(get(), get())
     }
-
     viewModel {
         CoinSearchBarViewModel(get())
+    }
+    viewModel {
+        CoinDetailViewModel(get())
     }
 }

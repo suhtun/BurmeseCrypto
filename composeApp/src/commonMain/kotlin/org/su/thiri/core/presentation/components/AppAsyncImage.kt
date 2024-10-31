@@ -30,13 +30,13 @@ fun AppAsyncImage(
                 shape = CircleShape,
             )
     ) {
-        setSingletonImageLoaderFactory { context ->
-            ImageLoader.Builder(context)
-                .components {
-                    add(SvgDecoder.Factory())
-                }
-                .build()
-        }
+//        setSingletonImageLoaderFactory { context ->
+//            ImageLoader.Builder(context)
+//                .components {
+//                    add(SvgDecoder.Factory())
+//                }
+//                .build()
+//        }
 
         coil3.compose.AsyncImage(
             modifier = modifier.clip(CircleShape),

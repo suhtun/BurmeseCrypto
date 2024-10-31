@@ -16,4 +16,5 @@ data class Coin(
     val marketCap: Double,
     val change: Double,
     val rank:Int,
+    val sparkline: List<Double>
 )
