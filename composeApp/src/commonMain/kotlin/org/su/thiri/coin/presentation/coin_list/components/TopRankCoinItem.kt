@@ -74,9 +74,6 @@ fun TopRankCoinItem(
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
                 color = secondaryFontColor,
-                modifier = Modifier
-                    .width(80.dp)
-                    .align(Alignment.CenterHorizontally)
             )
 
             PriceChange(

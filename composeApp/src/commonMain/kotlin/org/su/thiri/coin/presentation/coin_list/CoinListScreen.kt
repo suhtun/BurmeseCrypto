@@ -1,6 +1,7 @@
 package org.su.thiri.coin.presentation.coin_list
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -19,7 +20,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -39,11 +39,10 @@ import org.su.thiri.core.presentation.components.ErrorMessageView
 import org.su.thiri.coin.presentation.coin_search.CoinSearchBarView
 import org.su.thiri.coin.presentation.coin_detail.CoinDetailView
 import org.su.thiri.coin.presentation.coin_list.components.CoinListItem
-import org.su.thiri.coin.presentation.coin_list.model.CoinListItemType
 import org.koin.compose.viewmodel.koinViewModel
 import org.su.thiri.coin.presentation.coin_list.model.CoinUi
 
-const val maxTopBoxSize = 260f
+const val maxTopBoxSize = 210f
 const val minTopBoxSize = 0f
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -121,25 +120,29 @@ fun CoinListScreen(
                             .height(1.dp)
                             .background(Color.LightGray)
                     )
+                    val primaryFontColor = if (isSystemInDarkTheme()) {
+                        Color.White
+                    } else {
+                        Color.Black
+                    }
                     Text(
                         text = "Buy, sell and hold crypto",
                         fontSize = 16.sp,
+                        color = primaryFontColor,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(16.dp)
                     )
                     TopRankCoinListView(coins = topRanks)
                 }
 
-//                val configuration = LocalConfiguration.current
-//                val screenWidthDp = configuration.screenWidthDp
-//                val isLandscape =
-//                    configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE
+                val screenWidthDp = screenWidth()
 
-                val columns = when {
+//                val columns = when {
 //                    screenWidthDp >= 900 -> 3 // 3 columns for tablets (or screens wider than 600dp)
-//                    isLandscape -> 2          // 2 columns for phones in landscape
-                    else -> 1                 // 1 column for phones in portrait
-                }
+//                    screenWidthDp >= 600 -> 2          // 2 columns for phones in landscape
+//                    else -> 1                 // 1 column for phones in portrait
+//                }
+                val columns = 1
 
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(columns),
@@ -200,4 +203,6 @@ fun CoinListScreen(
     }
 }
 
+@Composable
+expect fun screenWidth(): Int
 
