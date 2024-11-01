@@ -109,7 +109,7 @@ fun TopRankCoinItem(
     Card(
         modifier = modifier
             .widthIn(min = 105.dp, max = 210.dp)
-            .padding(12.dp)
+            .padding(start = 12.dp)
             .clickable(onClick = { onClick(coinUi) }),
         elevation = CardDefaults.cardElevation(6.dp),
         colors = CardDefaults.cardColors(

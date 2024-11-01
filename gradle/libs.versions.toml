@@ -1,4 +1,5 @@
 [versions]
+adaptive = "1.0.0-alpha03"
 agp = "8.5.2"
 android-compileSdk = "34"
 android-minSdk = "24"
@@ -18,10 +19,14 @@ kotlin = "2.0.21"
 ktor = "3.0.0"
 koin = "4.0.0"
 landscapistCoil3 = "2.4.1"
+material3WindowSizeClass = "1.7.0"
 paging = "3.3.0-alpha02-0.4.0"
 coil3 = "3.0.0-rc02"
 
 [libraries]
+adaptive = { module = "org.jetbrains.compose.material3.adaptive:adaptive", version.ref = "adaptive" }
+adaptive-layout = { module = "org.jetbrains.compose.material3.adaptive:adaptive-layout", version.ref = "adaptive" }
+adaptive-navigation = { module = "org.jetbrains.compose.material3.adaptive:adaptive-navigation", version.ref = "adaptive" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -49,12 +54,12 @@ koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", ver
 koin-compose-viewmodel-navigation = { module = "io.insert-koin:koin-compose-viewmodel-navigation", version.ref = "koin" }
 
 landscapist-coil3 = { module = "com.github.skydoves:landscapist-coil3", version.ref = "landscapistCoil3" }
+material3-windowsize = { module = "org.jetbrains.compose.material3:material3-window-size-class", version.ref = "material3WindowSizeClass" }
 paging-compose-common = { module = "app.cash.paging:paging-compose-common", version.ref = "paging" }
 
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil3" }
 coil-compose-core = { module = "io.coil-kt.coil3:coil-compose-core", version.ref = "coil3" }
 coil-svg = { module = "io.coil-kt.coil3:coil-svg", version.ref = "coil3" }
-
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
@@ -64,6 +69,11 @@ kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref =
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
 [bundles]
+adaptive = [
+    "adaptive",
+    "adaptive-layout",
+    "adaptive-navigation"
+]
 coil = [
     "coil-compose",
     "coil-compose-core",

@@ -88,8 +88,7 @@ fun SampleSharedElements(modifier: Modifier = Modifier) {
     }
 }
 
-const val maxTopBoxSize = 240f
-const val maxLandscapeTopBoxSize = 100f
+const val maxTopBoxSize = 210f
 const val minTopBoxSize = 0f
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
@@ -137,9 +136,6 @@ fun CoinListScreen(
     Column(
         Modifier
             .nestedScroll(connection = nestedScrollConnection)
-//            .semantics {
-//                testTagsAsResourceId = true
-//            }
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
@@ -153,37 +149,17 @@ fun CoinListScreen(
             onRefresh = {
                 isRefreshing = true
                 coins.refresh() // Refresh the LazyPagingItems
+                isRefreshing = false
             }) {
 
             val topRanks =
                 coins.itemSnapshotList.items
                     .sortedByDescending { it.rank }.take(3)
 
-            val screenWidthDp = screenWidth()
-
-            var columns = 1
-
-            when {
-                screenWidthDp >= 900 -> {
-                    columns = 3
-                    topRankingBoxHeight = maxTopBoxSize
-                }
-
-                screenWidthDp >= 600 -> {
-                    columns = 2
-                    topRankingBoxHeight = maxLandscapeTopBoxSize
-                }
-
-                else -> {
-                    columns = 1
-                    topRankingBoxHeight = maxTopBoxSize
-                }
-            }
-
             Column(
                 Modifier
-                    .fillMaxWidth()
                     .height(topRankingBoxHeight.dp)
+                    .fillMaxWidth()
             ) {
                 val primaryFontColor = if (isSystemInDarkTheme()) {
                     Color.White
@@ -193,20 +169,19 @@ fun CoinListScreen(
                 Spacer(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 16.dp, bottom = 16.dp)
+                        .padding(top = 16.dp, bottom = 6.dp)
                         .height(1.dp)
                         .background(Color.LightGray)
                 )
-                if (columns != 2) {
 
-                    Text(
-                        text = "Buy, sell and hold crypto",
-                        fontSize = 16.sp,
-                        color = primaryFontColor,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(horizontal = 16.dp)
-                    )
-                }
+                Text(
+                    text = "Buy, sell and hold crypto",
+                    fontSize = 16.sp,
+                    color = primaryFontColor,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(start = 16.dp, bottom = 16.dp)
+                )
+
                 TopRankCoinListView(
                     coins = topRanks, onClick = {
                         onShowDetail(it)
@@ -214,6 +189,11 @@ fun CoinListScreen(
                     sharedTransitionScope = sharedTransitionScope,
                     animatedVisibilityScope = animatedVisibilityScope
                 )
+            }
+            val screenWidthDp = screenWidth()
+            val columns = when {
+                screenWidthDp >= 600 -> 3 // 3 columns for tablets (or screens wider than 600dp)
+                else -> 1                 // 1 column for phones in portrait
             }
 
             LazyVerticalGrid(
@@ -230,8 +210,10 @@ fun CoinListScreen(
                                 coinUi = coinUi,
                                 onClick = { coin ->
                                     onShowDetail(coin)
-//                                    viewModel.onAction(CoinListAction.OnCoinClick(coin))
+                                    viewModel.onAction(CoinListAction.OnCoinClick(coin))
                                 },
+                                sharedTransitionScope = sharedTransitionScope,
+                                animatedVisibilityScope = animatedVisibilityScope
                             )
                         }
                     }

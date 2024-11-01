@@ -160,6 +160,8 @@ fun CoinSearchBarView(
                         items(coins.size) { index ->
                             CoinListItem(
                                 coinUi = coins[index],
+                                sharedTransitionScope = sharedTransitionScope,
+                                animatedVisibilityScope = animatedVisibilityScope
                             )
 
                         }

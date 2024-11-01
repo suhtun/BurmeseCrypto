@@ -65,32 +65,32 @@ class CoinListViewModel(
             _state.update {
                 it.copy(
                     selectedCoin = coinUi,
-                    isLoading = true,
+//                    isLoading = true,
                 )
             }
 
-            coinRepository
-                .getCoinDetail(coinUi.id)
-                .onSuccess { coinDetail ->
-                    _state.update {
-                        it.copy(
-                            selectedCoin = coinUi.copy(
-                                description = coinDetail.description,
-                                websiteUrl = coinDetail.websiteUrl
-                            ),
-                            showCoinDetail = true,
-                            isLoading = false
-                        )
-                    }
-                }
-                .onError { error ->
-                    _state.update {
-                        it.copy(
-                            showCoinDetail = false,
-                            isLoading = false
-                        )
-                    }
-                }
+//            coinRepository
+//                .getCoinDetail(coinUi.id)
+//                .onSuccess { coinDetail ->
+//                    _state.update {
+//                        it.copy(
+//                            selectedCoin = coinUi.copy(
+//                                description = coinDetail.description,
+//                                websiteUrl = coinDetail.websiteUrl
+//                            ),
+//                            showCoinDetail = true,
+//                            isLoading = false
+//                        )
+//                    }
+//                }
+//                .onError { error ->
+//                    _state.update {
+//                        it.copy(
+//                            showCoinDetail = false,
+//                            isLoading = false
+//                        )
+//                    }
+//                }
         }
     }
 }

@@ -1,9 +1,10 @@
 package org.su.thiri.coin.presentation.coin_list.model
 
+import kotlinx.serialization.Serializable
 import org.su.thiri.coin.domain.Coin
 import org.su.thiri.core.presentation.util.toDisplayableNumber
 import kotlin.math.abs
-
+@Serializable
 data class CoinUi(
     val id: String = "",
     val name: String,
@@ -19,6 +20,7 @@ data class CoinUi(
     var websiteUrl: String? = null
 )
 
+@Serializable
 data class DisplayableNumber(
     val value: Double,
     val formatted: String

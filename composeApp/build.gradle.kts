@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinSerialization)
+    id("kotlin-parcelize")
 }
 
 kotlin {
@@ -53,8 +54,8 @@ kotlin {
             implementation(libs.bundles.ui.common)
             implementation(libs.bundles.coil)
             implementation(libs.landscapist.coil3)
-            implementation("org.jetbrains.compose.material3:material3-window-size-class:1.7.0")
-
+            implementation(libs.material3.windowsize)
+            implementation(libs.bundles.adaptive)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)

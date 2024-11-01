@@ -24,35 +24,35 @@ fun TopRankCoinListView(
     animatedVisibilityScope: AnimatedVisibilityScope,
 ) {
 
-    val screenWidthDp = screenWidth()
-    when {
-        screenWidthDp >= 900 -> {
+//    val screenWidthDp = screenWidth()
+//    when {
+//        screenWidthDp >= 900 -> {
+//            TopCoinsDisplay(
+//                coins = coins,
+//                onClick = onClick,
+//                sharedTransitionScope = sharedTransitionScope,
+//                animatedVisibilityScope = animatedVisibilityScope
+//            )
+//        }
+//
+//        screenWidthDp >= 600 -> {
+//            TopCoinsDisplayHorizontal(
+//                coins = coins,
+//                onClick = onClick,
+//                sharedTransitionScope = sharedTransitionScope,
+//                animatedVisibilityScope = animatedVisibilityScope
+//            )
+//        }
+//
+//        else -> {
             TopCoinsDisplay(
                 coins = coins,
                 onClick = onClick,
                 sharedTransitionScope = sharedTransitionScope,
                 animatedVisibilityScope = animatedVisibilityScope
             )
-        }
-
-        screenWidthDp >= 600 -> {
-            TopCoinsDisplay(
-                coins = coins,
-                onClick = onClick,
-                sharedTransitionScope = sharedTransitionScope,
-                animatedVisibilityScope = animatedVisibilityScope
-            )
-        }
-
-        else -> {
-            TopCoinsDisplay(
-                coins = coins,
-                onClick = onClick,
-                sharedTransitionScope = sharedTransitionScope,
-                animatedVisibilityScope = animatedVisibilityScope
-            )
-        }
-    }
+//        }
+//    }
 }
 
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -64,33 +64,41 @@ fun TopCoinsDisplay(
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope,
 ) {
-    Row(
+    LazyRow(
+        modifier = Modifier.fillMaxSize(),
         horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        coins.forEach { coin ->
+        items(coins.size) { index ->
             TopRankCoinItem(
-                coinUi = coin,
+                coinUi = coins[index],
                 onClick = onClick,
                 sharedTransitionScope = sharedTransitionScope,
                 animatedVisibilityScope = animatedVisibilityScope
             )
         }
-
-//        TopRankCoinItem(
-//            coinUi = coins[1],
-//            onClick = onClick,
-//            sharedTransitionScope = sharedTransitionScope,
-//            animatedVisibilityScope = animatedVisibilityScope
-//        )
-//
-//        TopRankCoinItem(
-//            coinUi = coins[2],
-//            onClick = onClick,
-//            sharedTransitionScope = sharedTransitionScope,
-//            animatedVisibilityScope = animatedVisibilityScope
-//        )
     }
-
 }
+
+@OptIn(ExperimentalSharedTransitionApi::class)
+@Composable
+fun TopCoinsDisplayHorizontal(
+    modifier: Modifier = Modifier,
+    coins: List<CoinUi>,
+    onClick: (CoinUi) -> Unit = {},
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope,
+) {
+    LazyRow() {
+        items(coins.size) { index ->
+            TopRankCoinHorizontalItem(
+                coinUi = coins[index],
+                onClick = onClick,
+                sharedTransitionScope = sharedTransitionScope,
+                animatedVisibilityScope = animatedVisibilityScope
+            )
+        }
+    }
+}
+
 

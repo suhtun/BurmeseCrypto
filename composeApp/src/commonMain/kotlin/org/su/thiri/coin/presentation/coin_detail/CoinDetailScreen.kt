@@ -76,17 +76,17 @@ fun CoinDetailScreen(
                 )
             }
 
-            with(sharedTransitionScope) {
+//            with(sharedTransitionScope) {
                 AppAsyncImage(
-                    modifier = Modifier.size(120.dp)
-                        .sharedElement(
-                            state = rememberSharedContentState(key = coinUi.id),
-                            animatedVisibilityScope
-                        ),
+                    modifier = Modifier.size(120.dp),
+//                        .sharedElement(
+//                            state = rememberSharedContentState(key = coinUi.id),
+//                            animatedVisibilityScope
+//                        ),
                     url = coinUi.iconUrl,
                     name = coinUi.name
                 )
-            }
+//            }
 
             val styledText = buildAnnotatedString {
                 withStyle(

@@ -26,11 +26,14 @@ import androidx.compose.ui.unit.sp
 import org.su.thiri.core.presentation.components.AppAsyncImage
 import org.su.thiri.coin.presentation.coin_list.model.CoinUi
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun CoinListItem(
     modifier: Modifier = Modifier,
     coinUi: CoinUi,
     onClick: (CoinUi) -> Unit = {},
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope,
 ) {
     val primaryFontColor = if (isSystemInDarkTheme()) {
         Color.White
@@ -57,11 +60,16 @@ fun CoinListItem(
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
 
-            AppAsyncImage(
-                url = coinUi.iconUrl,
-                name = coinUi.name,
-                modifier = Modifier.size(40.dp)
-            )
+            with(sharedTransitionScope) {
+                AppAsyncImage(
+                    url = coinUi.iconUrl,
+                    name = coinUi.name,
+                    modifier = Modifier.size(40.dp).sharedElement(
+                        state = rememberSharedContentState(key = coinUi.id),
+                        animatedVisibilityScope
+                    )
+                )
+            }
 
             Column(
                 modifier = Modifier.weight(1f)
