@@ -191,13 +191,14 @@ fun CoinListScreen(
                 )
             }
             val screenWidthDp = screenWidth()
-            val columns = when {
-                screenWidthDp >= 600 -> 3 // 3 columns for tablets (or screens wider than 600dp)
-                else -> 1                 // 1 column for phones in portrait
-            }
+//            val columns = when {
+//                screenWidthDp >= 900 -> 3
+//                screenWidthDp >= 600 -> 2 // 3 columns for tablets (or screens wider than 600dp)
+//                else -> 1                 // 1 column for phones in portrait
+//            }
 
             LazyVerticalGrid(
-                columns = GridCells.Fixed(columns),
+                columns = GridCells.Fixed(1),
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(top = topRankingBoxHeight.dp)
